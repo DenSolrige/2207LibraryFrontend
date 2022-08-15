@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register Book</title>
+</head>
+<body>
+    <nav><a href="book-viewer.html">Book Viewer</a></nav>
+    <h1>Register Book</h1>
+
+    <!-- Buttons in forms cause a submission event, it automatically tries to submit the info to a server -->
+    <!-- Before AJAX, html forms were the onnly way to submit info to a server on a webpage. IT FORCES THE PAGE TO RELOAD -->
+    <!-- Inputs in a form can get form validation -->
+    <form>
+        <fieldset>
+            <legend>Book Info</legend>
+            <label for="inputTitle">Title</label>
+            <input id="inputTitle" type="text" placeholder="Kite Runner" required minlength="3" maxlength="50">
+            <br>
+            <label for="inputAuthor">Author</label>
+            <input id="inputAuthor" type="text" placeholder="Khaled Hosseini" required>
+        </fieldset>
+        <button>Submit</button>
+    </form>
+</body>
+<script>
+    const inputTitle = document.getElementById("inputTitle");
+    const inputAuthor = document.getElementById("inputAuthor");
+
+    document.addEventListener("submit", async event => {
+        event.preventDefault(); // will catch the event submit from the form and prevent sending an http request immediately and reloading the page
+        const title = inputTitle.value;
+        const author = inputAuthor.value;
+        //{"id":0,"title":"Kite Runner","author":"Khaled Hosseini","returnDate":0}
+        //you can just use the variable without duplication of the name for shorter syntax
+        const book = {id:0 , title, author, reuturnDate:0};
+        const response = await fetch("http://localhost:8080/books",{
+            method:"POST",
+            body: JSON.stringify(book),
+            headers:{
+                "Content-Type":"application/json"
+            }
+        });
+        if(response.status === 201){
+            alert("Successfully created a book!")
+            inputTitle.value = "";
+            inputAuthor.value = "";
+        }else{
+            alert("Something went wrong!")
+        }
+    });
+
+</script>
+</html>
